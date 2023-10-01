@@ -7,7 +7,7 @@ import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
 import { parse, format } from 'date-fns'
 
-import avatar from '../../assets/images/avatar.jpg'
+import defaultAvatar from '../../assets/images/avatar.jpg'
 import Loading from '../Loading'
 import Error from '../Error'
 import { useGetPostsBySlugQuery } from '../../api/api'
@@ -36,15 +36,15 @@ function PostDetails() {
     ? format(parse(post.createdAt, 'yyyy-MM-dd\'T\'HH:mm:ss.SSSX', new Date()), 'MMMM d, yyyy')
     : 'Date unknown'
 
-  const tags = post.tagList.map((tag) => (
+  const tags = post.tagList.filter((tag) => tag.trim()).map((tag) => (
     <div className={classes.info_tags} key={tag}>
       {tag}
     </div>
   ))
 
-  const markDownBody = post.body.replace(/\\n/g, '<br/>')
+  // const markDownBody = post.body.replace(/\\n/g, '<br/>')
   // const markDownBody = post.body.replace(/\\n/g, '\n')
-  // const markDownBody = post.body
+  const markDownBody = post.body
 
   return (
     <div className={classes.wrapper}>
@@ -65,7 +65,7 @@ function PostDetails() {
               <div className={classes.user_userName}>{post.author.username}</div>
               <div className={classes.user_postDate}>{formattedDate}</div>
             </div>
-            <img className={classes.card__avatar} src={avatar} alt="Avatar" />
+            <img className={classes.card__avatar} src={post.author.image ? post.author.image : defaultAvatar} alt="Avatar" />
           </div>
         </div>
         <p className={classes.card__description}>{post.description}</p>

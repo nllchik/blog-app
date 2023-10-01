@@ -9,7 +9,7 @@ import classes from './PostCard.module.scss'
 
 function PostCard({ post }) {
   const { author, createdAt, description, favoritesCount, title } = post
-  const tags = post.tagList.map((tag) => (
+  const tags = post.tagList.filter((tag) => tag.trim()).map((tag) => (
     <div className={classes.info_tags} key={tag}>
       {tag}
     </div>
@@ -23,9 +23,7 @@ function PostCard({ post }) {
     if (text.length <= maxLength) {
       return text
     }
-
-    const lastSpaceIndex = text.lastIndexOf(' ', maxLength)
-    const truncatedText = `${text.slice(0, lastSpaceIndex)}...`
+    const truncatedText = `${text.slice(0, maxLength)}...`
     return truncatedText
   }
 

@@ -1,7 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-const API_URL = 'https://api.realworld.io/api'
-// const API_URL = 'https://blog.kata.academy/api'
+import postsEndpoints from './endpoints/posts'
+import usersEndpoints from './endpoints/users'
+// const API_URL = 'https://api.realworld.io/api'
+const API_URL = 'https://blog.kata.academy/api'
 
 export const api = createApi({
   reducerPath: 'api',
@@ -10,18 +12,17 @@ export const api = createApi({
     baseUrl: API_URL,
   }),
   endpoints: (builder) => ({
-    getPosts: builder.query({
-      query: ({ offset = 0, limit = 20 }) => ({
-        url: '/articles',
-        params: { offset, limit },
-      }),
-    }),
-    getPostsBySlug: builder.query({
-      query: (slug) => ({
-        url: `/articles/${slug}`,
-      }),
-    }),
+    ...postsEndpoints(builder),
+    ...usersEndpoints(builder),
   }),
 })
 
-export const { useGetPostsQuery, useGetPostsBySlugQuery, useLazyGetPostsQuery } = api
+export const {
+  useGetPostsQuery,
+  useGetPostsBySlugQuery,
+  useLazyGetPostsQuery,
+  useRegisterUserMutation,
+  useLoginUserMutation,
+  useGetCurrentUserQuery,
+  useUpdateCurrentUserMutation,
+} = api
