@@ -33,7 +33,9 @@ function Header() {
 
   const HeaderIsLogged = (
     <div className={classes.header__user_navigation}>
-      <Link className={classes.header__create}>Create article</Link>
+      <Link to="/new-article" className={classes.header__create}>
+        Create article
+      </Link>
       <Link to="/profile">
         <div className={classes.header__user_name}>{user && user.username}</div>
       </Link>

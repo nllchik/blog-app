@@ -61,7 +61,7 @@ export default function SignIn() {
               message: 'Please enter valid mail',
             },
           })}
-          type="text"
+          type="email"
           placeholder="Email address"
         />
         {errorMessage('email')}

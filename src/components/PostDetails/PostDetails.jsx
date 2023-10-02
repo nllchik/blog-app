@@ -1,22 +1,34 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable prettier/prettier */
 /* eslint-disable react/no-children-prop */
-import React from 'react'
-import { useParams } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
 import { parse, format } from 'date-fns'
+import { useSelector } from 'react-redux'
 
 import defaultAvatar from '../../assets/images/avatar.jpg'
 import Loading from '../Loading'
 import Error from '../Error'
-import { useGetPostsBySlugQuery } from '../../api/api'
+import { useDeletePostMutation, useGetPostsBySlugQuery } from '../../api/api'
 
 import classes from './PostDetails.module.scss'
 
 function PostDetails() {
   const { slug } = useParams()
   const { data, isLoading, isError, error } = useGetPostsBySlugQuery(slug)
+  const [deletePost, deleteResult] = useDeletePostMutation()
+  const userData = useSelector((state) => state.auth.user)
+  const localToken = localStorage.getItem('token')
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if(deleteResult.isSuccess){
+      navigate('/articles')
+    }
+  },[deleteResult.isSuccess, navigate])
 
   const post = data?.article
 
@@ -41,10 +53,26 @@ function PostDetails() {
       {tag}
     </div>
   ))
-
-  // const markDownBody = post.body.replace(/\\n/g, '<br/>')
-  // const markDownBody = post.body.replace(/\\n/g, '\n')
+  
   const markDownBody = post.body
+
+  const showController = post.author.username === userData?.username
+
+  const handleDeleteButton = () => {
+    const payload = { token: localToken, slug}
+    deletePost(payload)
+  }
+
+  const handleEditButton = () => {
+    navigate(`/articles/${slug}/edit`)
+  }
+
+  const userButtons = (
+    <div className={classes.card_buttons}>
+      <button className={classes.user_delete_button} onClick={handleDeleteButton} type='button'>Delete</button>
+      <button className={classes.user_edit_button} onClick={handleEditButton} type='button'>Edit</button>
+    </div>
+  )
 
   return (
     <div className={classes.wrapper}>
@@ -68,7 +96,12 @@ function PostDetails() {
             <img className={classes.card__avatar} src={post.author.image ? post.author.image : defaultAvatar} alt="Avatar" />
           </div>
         </div>
-        <p className={classes.card__description}>{post.description}</p>
+        <div className={classes.card__description_wrapper}>
+          <div>
+            <p className={classes.card__description}>{post.description}</p>
+          </div>
+          {showController ? userButtons : null}
+        </div>
         <div className={classes.card__body}>
           <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
             {markDownBody}

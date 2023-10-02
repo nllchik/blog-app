@@ -85,7 +85,7 @@ export default function SignUp() {
               message: 'Please enter valid mail',
             },
           })}
-          type="text"
+          type="email"
           placeholder="Email address"
         />
         {errors?.email && <div className={classes.signup_form__message}>{errors.email.message}</div>}

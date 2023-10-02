@@ -40,7 +40,11 @@ export default function EditProfile() {
   })
 
   const onSubmit = (data) => {
-    const payload = { token: localToken, user: { ...data } }
+    const { image, ...rest } = data
+    let payload = image ? { token: localToken, user: { ...data } } : { token: localToken, user: { ...rest } }
+    if (image === '') {
+      payload = { token: localToken, user: { ...rest } }
+    }
     updateUser(payload)
     reset()
   }
@@ -85,7 +89,7 @@ export default function EditProfile() {
               message: 'Please entere valid mail',
             },
           })}
-          type="text"
+          type="email"
           placeholder="New email address"
         />
         {errors?.email && <div className={classes.edit_form__message}>{errors.email.message}</div>}
@@ -112,7 +116,6 @@ export default function EditProfile() {
         <input
           className={`${classes.edit_form__input} ${errors?.image ? classes.input_error : ''}`}
           {...register('image', {
-            required: 'Image is required field',
             pattern: {
               value: /^(ftp|http|https):\/\/[^ "]+$/,
               message: 'Invalid URL',

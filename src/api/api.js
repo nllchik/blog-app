@@ -25,4 +25,6 @@ export const {
   useLoginUserMutation,
   useGetCurrentUserQuery,
   useUpdateCurrentUserMutation,
+  useCreatePostMutation,
+  useDeletePostMutation,
 } = api
