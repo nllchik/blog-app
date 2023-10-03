@@ -21,6 +21,7 @@
     "react-router-dom": "^6.16.0",
     "react-scripts": "5.0.1",
     "react-svg-spinner": "^1.0.4",
+    "react-svg-spinners": "^0.3.1",
     "redux": "^4.2.1",
     "redux-thunk": "^2.4.2",
     "rehype-raw": "^7.0.0",

@@ -1,10 +1,11 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react'
 import { useForm, useFieldArray } from 'react-hook-form'
+import { ThreeDotsBounce } from 'react-svg-spinners'
 
 import classes from './ArticleForm.module.scss'
 
-export default function ArticleForm({ onSubmit, initialData = {} }) {
+export default function ArticleForm({ onSubmit, isLoading, initialData = {} }) {
   const defaultValues = {
     title: initialData.title || '',
     description: initialData.description || '',
@@ -30,6 +31,9 @@ export default function ArticleForm({ onSubmit, initialData = {} }) {
   const onSubmitHandler = (data) => {
     onSubmit(data)
   }
+
+  const submitButtonText = initialData.title ? 'Save' : 'Send'
+  const buttonContent = isLoading ? <ThreeDotsBounce color="white" /> : submitButtonText
 
   return (
     <form className={classes.article_form} onSubmit={handleSubmit(onSubmitHandler)}>
@@ -101,8 +105,8 @@ export default function ArticleForm({ onSubmit, initialData = {} }) {
             Add tag
           </button>
         </div>
-        <button className={classes.article_form__submit_button} type="submit">
-          Send
+        <button className={classes.article_form__submit_button} disabled={isLoading} type="submit">
+          {buttonContent}
         </button>
         <div />
       </div>

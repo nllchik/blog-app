@@ -3,6 +3,9 @@ const postsEndpoints = (builder) => ({
     query: ({ offset = 0, limit = 20 }) => ({
       url: '/articles',
       params: { offset, limit },
+      headers: {
+        Authorization: `Token ${localStorage.getItem('token') || ''}`,
+      },
     }),
     providesTags: ['post'],
   }),
@@ -51,6 +54,16 @@ const postsEndpoints = (builder) => ({
         },
       },
     }),
+  }),
+  toggleFavorited: builder.mutation({
+    query: ({ token, slug, favorited }) => ({
+      url: `/articles/${slug}/favorite`,
+      method: favorited ? 'DELETE' : 'POST',
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    }),
+    invalidatesTags: ['post'],
   }),
 })
 

@@ -1,23 +1,26 @@
 /* eslint-disable react/no-array-index-key */
-/* eslint-disable prettier/prettier */
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { parse, format } from 'date-fns'
 
 import defaultAvatar from '../../assets/images/avatar.png'
+import { useToggleFavoritedMutation } from '../../api/api'
 
 import classes from './PostCard.module.scss'
 
 function PostCard({ post }) {
-  const { author, createdAt, description, favoritesCount, title } = post
-  const tags = post.tagList.filter((tag) => tag.trim()).map((tag, index) => (
-    <div className={classes.info_tags} key={`${tag}-${index}`}>
-      {tag}
-    </div>
-  ))
+  const { author, createdAt, description, favoritesCount, title, favorited, slug } = post
+  const tags = post.tagList
+    .filter((tag) => tag.trim())
+    .map((tag, index) => (
+      <div className={classes.info_tags} key={`${tag}-${index}`}>
+        {tag}
+      </div>
+    ))
 
   const formattedDate = createdAt
-    ? format(parse(createdAt, 'yyyy-MM-dd\'T\'HH:mm:ss.SSSX', new Date()), 'MMMM d, yyyy')
+    ? // eslint-disable-next-line prettier/prettier
+     format(parse(createdAt, 'yyyy-MM-dd\'T\'HH:mm:ss.SSSX', new Date()), 'MMMM d, yyyy')
     : 'Date unknown'
 
   function truncateText(text, maxLength) {
@@ -31,6 +34,17 @@ function PostCard({ post }) {
     return truncatedText
   }
 
+  // eslint-disable-next-line no-unused-vars
+  const [addFavorited, { isLoading }] = useToggleFavoritedMutation()
+
+  const handleLike = () => {
+    const localToken = localStorage.getItem('token')
+    const payload = { token: localToken, slug, favorited }
+    console.log('handleClick', favorited)
+    console.log('post', post)
+    addFavorited(payload)
+  }
+
   return (
     <div className={classes.card}>
       <div className={classes.card__content}>
@@ -39,7 +53,12 @@ function PostCard({ post }) {
             <Link to={`/articles/${post.slug}`}>
               <h2 className={classes.info_title}>{truncateText(title, 45)}</h2>
             </Link>
-            <div className={classes.info_likes}>🤍 {favoritesCount}</div>
+            <div className={classes.info_likes}>
+              <button className={classes.like_button} type="button" disabled={isLoading} onClick={handleLike}>
+                {favorited ? '❤️' : '🤍'}
+              </button>
+              {favoritesCount}
+            </div>
           </div>
           <div className={classes.info_tag_container}>{tags}</div>
         </div>

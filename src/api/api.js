@@ -28,4 +28,5 @@ export const {
   useCreatePostMutation,
   useDeletePostMutation,
   useUpdateAnArticleMutation,
+  useToggleFavoritedMutation,
 } = api

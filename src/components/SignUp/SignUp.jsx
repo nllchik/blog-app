@@ -4,6 +4,7 @@ import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import { ThreeDotsBounce } from 'react-svg-spinners'
 
 import { useRegisterUserMutation } from '../../api/api'
 import { setUser } from '../../redux/auth/auth.slice'
@@ -11,7 +12,7 @@ import { setUser } from '../../redux/auth/auth.slice'
 import classes from './SignUp.module.scss'
 
 export default function SignUp() {
-  const [registerUser, result] = useRegisterUserMutation()
+  const [registerUser, { data, isSuccess, error, isLoading }] = useRegisterUserMutation()
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn)
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -28,30 +29,30 @@ export default function SignUp() {
   })
 
   useEffect(() => {
-    if (result.isSuccess) {
-      localStorage.setItem('token', result.data.user.token)
-      dispatch(setUser(result.data.user))
+    if (isSuccess) {
+      localStorage.setItem('token', data.user.token)
+      dispatch(setUser(data.user))
     }
-    if (isLoggedIn || result.isSuccess || result.data?.user) {
+    if (isLoggedIn || isSuccess || data?.user) {
       navigate('/articles')
     }
-  }, [result, navigate, isLoggedIn])
+  }, [data, isLoggedIn, isSuccess, navigate])
 
   const watchPassword = watch('password', '')
 
-  const onSubmit = (data) => {
-    const { username, email, password } = data
+  const onSubmit = (dataForm) => {
+    const { username, email, password } = dataForm
     registerUser({ username, email, password })
     reset()
   }
 
   useEffect(() => {
-    if (result.error) {
-      Object.entries(result.error.data.errors).forEach(([key, value]) => {
+    if (error) {
+      Object.entries(error.data.errors).forEach(([key, value]) => {
         setError(key, { type: 'custom', message: `${key} ${value}` })
       })
     }
-  }, [result])
+  }, [error])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={classes.signup_form}>
@@ -134,8 +135,8 @@ export default function SignUp() {
         {errors?.personalInformation && (
           <div className={classes.signup_form__message}>{errors.personalInformation.message}</div>
         )}
-        <button className={classes.signup_form__submit_button} type="submit">
-          Create
+        <button className={classes.signup_form__submit_button} disabled={isLoading} type="submit">
+          {isLoading ? <ThreeDotsBounce color="white" /> : 'Create'}
         </button>
         <div className={classes.signup_form__signin_container}>
           <label className={classes.signup_form__sigin_text}>Already have an account?</label>

@@ -5,20 +5,20 @@ import { useCreatePostMutation } from '../../api/api'
 import ArticleForm from '../ArticleForm'
 
 export default function CreateArticle() {
-  const [createPost, result] = useCreatePostMutation()
+  const [createPost, { isSuccess, isLoading }] = useCreatePostMutation()
   const localToken = localStorage.getItem('token')
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (result.isSuccess) {
+    if (isSuccess) {
       navigate('/articles')
     }
-  }, [result.isSuccess, navigate])
+  }, [isSuccess, navigate])
 
   const onSubmit = (data) => {
     const payload = { token: localToken, post: data }
     createPost(payload)
   }
 
-  return <ArticleForm onSubmit={onSubmit} />
+  return <ArticleForm onSubmit={onSubmit} isLoading={isLoading} />
 }

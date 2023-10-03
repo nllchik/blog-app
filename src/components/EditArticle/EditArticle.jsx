@@ -12,7 +12,7 @@ function EditArticle() {
   const navigate = useNavigate()
 
   const { data: postData, isLoading, isError, refetch } = useGetPostsBySlugQuery(slug)
-  const [updatePost, updateResult] = useUpdateAnArticleMutation()
+  const [updatePost, { isSuccess: updateSuccess, isLoading: updateLoading }] = useUpdateAnArticleMutation()
   const userData = useSelector((state) => state?.auth?.user)
   const localToken = localStorage.getItem('token')
 
@@ -25,11 +25,11 @@ function EditArticle() {
     if (postData?.isSuccess && userData?.username !== postData?.article.author.username) {
       navigate('/sign-in')
     }
-    if (updateResult?.isSuccess) {
+    if (updateSuccess) {
       refetch()
       navigate(`/articles/${slug}`)
     }
-  }, [updateResult.isSuccess, navigate, refetch, userData?.username, postData?.article.author])
+  }, [updateSuccess, navigate, refetch, userData?.username, postData?.article.author])
 
   if (isLoading) {
     return <Loading />
@@ -38,7 +38,7 @@ function EditArticle() {
   if (isError) {
     return <Error />
   }
-  return <ArticleForm initialData={postData.article} onSubmit={handleArticleSubmit} />
+  return <ArticleForm initialData={postData.article} onSubmit={handleArticleSubmit} isLoading={updateLoading} />
 }
 
 export default EditArticle
