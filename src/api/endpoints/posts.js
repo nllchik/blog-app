@@ -37,6 +37,21 @@ const postsEndpoints = (builder) => ({
     }),
     invalidatesTags: ['post'],
   }),
+  updateAnArticle: builder.mutation({
+    query: ({ token, slug, article }) => ({
+      url: `/articles/${slug}`,
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Token ${token}`,
+      },
+      body: {
+        article: {
+          ...article,
+        },
+      },
+    }),
+  }),
 })
 
 export default postsEndpoints

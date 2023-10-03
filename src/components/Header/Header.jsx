@@ -3,7 +3,7 @@ import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
-import avatar from '../../assets/images/avatar.jpg'
+import avatar from '../../assets/images/avatar.png'
 import { logout } from '../../redux/auth/auth.slice'
 
 import classes from './Header.module.scss'

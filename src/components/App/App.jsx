@@ -9,9 +9,9 @@ import SignUp from '../SignUp'
 import SignIn from '../SignIn'
 import EditProfile from '../EditProfile'
 import CreateArticle from '../CreateArticle'
+import EditArticle from '../EditArticle'
 import { useGetCurrentUserQuery } from '../../api/api'
 import { setUser } from '../../redux/auth/auth.slice'
-// import PrivateRoute from '../../utils/router/privateRoute'
 
 import classes from './App.module.scss'
 
@@ -37,7 +37,7 @@ function App() {
         <Route path="/articles" element={<PostList />} />
         <Route path="/details" element={<PostDetails />} />
         <Route path="/articles/:slug" element={<PostDetails />} />
-        <Route path="/articles/:slug/edit" element={<CreateArticle />} />
+        <Route path="/articles/:slug/edit" element={<EditArticle />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/profile" element={<EditProfile />} />

@@ -1,15 +1,14 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable prettier/prettier */
-/* eslint-disable react/no-children-prop */
+/* eslint-disable react/jsx-no-bind */
+/* eslint-disable react/no-array-index-key */
+
 import React, { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
-import rehypeRaw from 'rehype-raw'
 import { parse, format } from 'date-fns'
 import { useSelector } from 'react-redux'
+import { Popconfirm, message } from 'antd'
 
-import defaultAvatar from '../../assets/images/avatar.jpg'
+import defaultAvatar from '../../assets/images/avatar.png'
 import Loading from '../Loading'
 import Error from '../Error'
 import { useDeletePostMutation, useGetPostsBySlugQuery } from '../../api/api'
@@ -25,10 +24,10 @@ function PostDetails() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    if(deleteResult.isSuccess){
+    if (deleteResult.isSuccess) {
       navigate('/articles')
     }
-  },[deleteResult.isSuccess, navigate])
+  }, [deleteResult.isSuccess, navigate])
 
   const post = data?.article
 
@@ -45,32 +44,52 @@ function PostDetails() {
   }
 
   const formattedDate = post.createdAt
-    ? format(parse(post.createdAt, 'yyyy-MM-dd\'T\'HH:mm:ss.SSSX', new Date()), 'MMMM d, yyyy')
+    ? // eslint-disable-next-line quotes
+      format(parse(post.createdAt, "yyyy-MM-dd'T'HH:mm:ss.SSSX", new Date()), 'MMMM d, yyyy')
     : 'Date unknown'
 
-  const tags = post.tagList.filter((tag) => tag.trim()).map((tag) => (
-    <div className={classes.info_tags} key={tag}>
-      {tag}
-    </div>
-  ))
-  
+  const tags = post.tagList
+    .filter((tag) => tag.trim())
+    .map((tag, index) => (
+      <div className={classes.info_tags} key={`${tag}-${index}`}>
+        {tag}
+      </div>
+    ))
+
   const markDownBody = post.body
 
   const showController = post.author.username === userData?.username
-
-  const handleDeleteButton = () => {
-    const payload = { token: localToken, slug}
-    deletePost(payload)
-  }
 
   const handleEditButton = () => {
     navigate(`/articles/${slug}/edit`)
   }
 
+  function confirm() {
+    message.success('Click on Yes')
+    const payload = { token: localToken, slug }
+    deletePost(payload)
+  }
+
+  function cancel() {
+    message.error('Click on No')
+  }
+
   const userButtons = (
     <div className={classes.card_buttons}>
-      <button className={classes.user_delete_button} onClick={handleDeleteButton} type='button'>Delete</button>
-      <button className={classes.user_edit_button} onClick={handleEditButton} type='button'>Edit</button>
+      <Popconfirm
+        title="Are you sure to delete this post?"
+        onConfirm={confirm}
+        onCancel={cancel}
+        okText="Yes"
+        cancelText="No"
+      >
+        <button className={classes.user_delete_button} type="button">
+          Delete
+        </button>
+      </Popconfirm>
+      <button className={classes.user_edit_button} onClick={handleEditButton} type="button">
+        Edit
+      </button>
     </div>
   )
 
@@ -93,7 +112,11 @@ function PostDetails() {
               <div className={classes.user_userName}>{post.author.username}</div>
               <div className={classes.user_postDate}>{formattedDate}</div>
             </div>
-            <img className={classes.card__avatar} src={post.author.image ? post.author.image : defaultAvatar} alt="Avatar" />
+            <img
+              className={classes.card__avatar}
+              src={post.author.image ? post.author.image : defaultAvatar}
+              alt="Avatar"
+            />
           </div>
         </div>
         <div className={classes.card__description_wrapper}>
@@ -103,9 +126,7 @@ function PostDetails() {
           {showController ? userButtons : null}
         </div>
         <div className={classes.card__body}>
-          <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
-            {markDownBody}
-          </ReactMarkdown>
+          <ReactMarkdown>{markDownBody}</ReactMarkdown>
         </div>
       </div>
     </div>

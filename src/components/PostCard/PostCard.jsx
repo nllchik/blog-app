@@ -1,16 +1,17 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable prettier/prettier */
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { parse, format } from 'date-fns'
 
-import defaultAvatar from '../../assets/images/avatar.jpg'
+import defaultAvatar from '../../assets/images/avatar.png'
 
 import classes from './PostCard.module.scss'
 
 function PostCard({ post }) {
   const { author, createdAt, description, favoritesCount, title } = post
-  const tags = post.tagList.filter((tag) => tag.trim()).map((tag) => (
-    <div className={classes.info_tags} key={tag}>
+  const tags = post.tagList.filter((tag) => tag.trim()).map((tag, index) => (
+    <div className={classes.info_tags} key={`${tag}-${index}`}>
       {tag}
     </div>
   ))
