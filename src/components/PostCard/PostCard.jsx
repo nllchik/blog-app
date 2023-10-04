@@ -40,8 +40,6 @@ function PostCard({ post }) {
   const handleLike = () => {
     const localToken = localStorage.getItem('token')
     const payload = { token: localToken, slug, favorited }
-    console.log('handleClick', favorited)
-    console.log('post', post)
     addFavorited(payload)
   }
 
