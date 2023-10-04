@@ -15,8 +15,4 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(api.middleware),
 })
 
-store.subscribe(() => {
-  console.log(store.getState())
-})
-
 export default store
