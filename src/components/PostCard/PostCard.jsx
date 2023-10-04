@@ -2,6 +2,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { parse, format } from 'date-fns'
+import { useSelector } from 'react-redux'
 
 import defaultAvatar from '../../assets/images/avatar.png'
 import { useToggleFavoritedMutation } from '../../api/api'
@@ -10,6 +11,7 @@ import classes from './PostCard.module.scss'
 
 function PostCard({ post }) {
   const { author, createdAt, description, favoritesCount, title, favorited, slug } = post
+  const isLoggedIn = useSelector((state) => state?.auth.isLoggedIn)
   const tags = post.tagList
     .filter((tag) => tag.trim())
     .map((tag, index) => (
@@ -52,7 +54,12 @@ function PostCard({ post }) {
               <h2 className={classes.info_title}>{truncateText(title, 45)}</h2>
             </Link>
             <div className={classes.info_likes}>
-              <button className={classes.like_button} type="button" disabled={isLoading} onClick={handleLike}>
+              <button
+                className={classes.like_button}
+                type="button"
+                disabled={isLoading || !isLoggedIn}
+                onClick={handleLike}
+              >
                 {favorited ? '❤️' : '🤍'}
               </button>
               {favoritesCount}
