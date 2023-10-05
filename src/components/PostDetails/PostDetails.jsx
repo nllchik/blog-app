@@ -12,6 +12,7 @@ import defaultAvatar from '../../assets/images/avatar.png'
 import Loading from '../Loading'
 import Error from '../Error'
 import { useDeletePostMutation, useGetPostsBySlugQuery } from '../../api/api'
+import { ARTICLES } from '../../utils/routes/routesPath'
 
 import classes from './PostDetails.module.scss'
 
@@ -25,7 +26,7 @@ function PostDetails() {
 
   useEffect(() => {
     if (deleteResult.isSuccess) {
-      navigate('/articles')
+      navigate(ARTICLES)
     }
   }, [deleteResult.isSuccess, navigate])
 
@@ -114,7 +115,10 @@ function PostDetails() {
             </div>
             <img
               className={classes.card__avatar}
-              src={post.author.image ? post.author.image : defaultAvatar}
+              src={post.author.image}
+              onError={(e) => {
+                e.target.src = defaultAvatar
+              }}
               alt="Avatar"
             />
           </div>

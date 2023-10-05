@@ -1,12 +1,13 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { ThreeDotsBounce } from 'react-svg-spinners'
 
 import { setUser } from '../../redux/auth/auth.slice'
 import { useLoginUserMutation } from '../../api/api'
+import { SIGN_UP } from '../../utils/routes/routesPath'
 
 import classes from './SignIn.module.scss'
 
@@ -14,6 +15,8 @@ export default function SignIn() {
   const [loginUser, { data, isSuccess, error, isLoading }] = useLoginUserMutation()
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const location = useLocation()
+  const fromPage = location.state?.from?.pathname || '/articles'
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn)
 
   const {
@@ -31,7 +34,7 @@ export default function SignIn() {
       dispatch(setUser(data.user))
     }
     if (isLoggedIn || (isSuccess && data?.user)) {
-      navigate('/articles')
+      navigate(fromPage)
     }
   }, [isSuccess, navigate, isLoggedIn])
 
@@ -83,7 +86,7 @@ export default function SignIn() {
         </button>
         <div className={classes.signin_form__signin_container}>
           <label className={classes.signin_form__signin_text}>Don’t have an account?</label>
-          <Link to="/sign-up" className={classes.signin_form__signin_link}>
+          <Link to={SIGN_UP} className={classes.signin_form__signin_link}>
             Sign Up.
           </Link>
         </div>

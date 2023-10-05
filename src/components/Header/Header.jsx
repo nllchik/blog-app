@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import avatar from '../../assets/images/avatar.png'
 import { logout } from '../../redux/auth/auth.slice'
+import { ARTICLES, SIGN_UP, SIGN_IN, PROFILE, NEW_ARTICLE } from '../../utils/routes/routesPath'
 
 import classes from './Header.module.scss'
 
@@ -17,15 +18,15 @@ function Header() {
   const handleLogOut = () => {
     localStorage.removeItem('token')
     dispatch(logout())
-    navigate('/articles')
+    navigate(ARTICLES)
   }
 
   const HeaderIsUnLogged = (
     <div className={classes.header__authLinks}>
-      <Link to="/sign-in" className={classes.header__signIn}>
+      <Link to={SIGN_IN} className={classes.header__signIn}>
         Sign In
       </Link>
-      <Link to="/sign-up" className={classes.header__signUp}>
+      <Link to={SIGN_UP} className={classes.header__signUp}>
         Sign Up
       </Link>
     </div>
@@ -33,13 +34,13 @@ function Header() {
 
   const HeaderIsLogged = (
     <div className={classes.header__user_navigation}>
-      <Link to="/new-article" className={classes.header__create}>
+      <Link to={NEW_ARTICLE} className={classes.header__create}>
         Create article
       </Link>
-      <Link to="/profile">
+      <Link to={PROFILE}>
         <div className={classes.header__user_name}>{user && user.username}</div>
       </Link>
-      <Link to="/profile">
+      <Link to={PROFILE}>
         <img className={classes.header__avatar} src={user?.image ? user.image : avatar} alt="Avatar" />
       </Link>
       <button type="button" className={classes.header__Log_out} onClick={() => dispatch(handleLogOut)}>
@@ -50,7 +51,7 @@ function Header() {
 
   return (
     <header className={classes.header}>
-      <Link to="/articles" className={classes.header__logo}>
+      <Link to={ARTICLES} className={classes.header__logo}>
         Realworld Blog
       </Link>
       {loginStatus ? HeaderIsLogged : HeaderIsUnLogged}

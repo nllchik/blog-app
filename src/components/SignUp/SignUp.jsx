@@ -8,6 +8,7 @@ import { ThreeDotsBounce } from 'react-svg-spinners'
 
 import { useRegisterUserMutation } from '../../api/api'
 import { setUser } from '../../redux/auth/auth.slice'
+import { ARTICLES, SIGN_IN } from '../../utils/routes/routesPath'
 
 import classes from './SignUp.module.scss'
 
@@ -34,7 +35,7 @@ export default function SignUp() {
       dispatch(setUser(data.user))
     }
     if (isLoggedIn || isSuccess || data?.user) {
-      navigate('/articles')
+      navigate(ARTICLES)
     }
   }, [data, isLoggedIn, isSuccess, navigate])
 
@@ -140,7 +141,7 @@ export default function SignUp() {
         </button>
         <div className={classes.signup_form__signin_container}>
           <label className={classes.signup_form__sigin_text}>Already have an account?</label>
-          <Link to="/sign-in" className={classes.signup_form__signin_link} href="#">
+          <Link to={SIGN_IN} className={classes.signup_form__signin_link} href="#">
             Sign In.
           </Link>
         </div>

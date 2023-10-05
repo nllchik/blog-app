@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { useCreatePostMutation } from '../../api/api'
 import ArticleForm from '../ArticleForm'
+import { ARTICLES } from '../../utils/routes/routesPath'
 
 export default function CreateArticle() {
   const [createPost, { isSuccess, isLoading }] = useCreatePostMutation()
@@ -11,7 +12,7 @@ export default function CreateArticle() {
 
   useEffect(() => {
     if (isSuccess) {
-      navigate('/articles')
+      navigate(ARTICLES)
     }
   }, [isSuccess, navigate])
 

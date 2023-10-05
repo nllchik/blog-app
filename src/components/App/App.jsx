@@ -10,6 +10,17 @@ import SignIn from '../SignIn'
 import EditProfile from '../EditProfile'
 import CreateArticle from '../CreateArticle'
 import EditArticle from '../EditArticle'
+import RequireAuth from '../../utils/hoc/RequireAuth'
+import {
+  HOME,
+  ARTICLES,
+  ARTICLE_DETAILS,
+  ARTICLE_EDIT,
+  SIGN_UP,
+  SIGN_IN,
+  PROFILE,
+  NEW_ARTICLE,
+} from '../../utils/routes/routesPath'
 import { useGetCurrentUserQuery } from '../../api/api'
 import { setUser } from '../../redux/auth/auth.slice'
 
@@ -33,15 +44,35 @@ function App() {
     <main className={classes.main}>
       <Header />
       <Routes>
-        <Route path="/" element={<Navigate to="/articles" />} />
-        <Route path="/articles" element={<PostList />} />
-        <Route path="/details" element={<PostDetails />} />
-        <Route path="/articles/:slug" element={<PostDetails />} />
-        <Route path="/articles/:slug/edit" element={<EditArticle />} />
-        <Route path="/sign-up" element={<SignUp />} />
-        <Route path="/sign-in" element={<SignIn />} />
-        <Route path="/profile" element={<EditProfile />} />
-        <Route path="/new-article" element={<CreateArticle />} />
+        <Route path={HOME} element={<Navigate to={ARTICLES} />} />
+        <Route path={ARTICLES} element={<PostList />} />
+        <Route path={ARTICLE_DETAILS} element={<PostDetails />} />
+        <Route
+          path={ARTICLE_EDIT}
+          element={
+            <RequireAuth>
+              <EditArticle />
+            </RequireAuth>
+          }
+        />
+        <Route path={SIGN_UP} element={<SignUp />} />
+        <Route path={SIGN_IN} element={<SignIn />} />
+        <Route
+          path={PROFILE}
+          element={
+            <RequireAuth>
+              <EditProfile />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path={NEW_ARTICLE}
+          element={
+            <RequireAuth>
+              <CreateArticle />
+            </RequireAuth>
+          }
+        />
       </Routes>
     </main>
   )

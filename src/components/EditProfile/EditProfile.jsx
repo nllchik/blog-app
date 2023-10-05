@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 import { useUpdateCurrentUserMutation } from '../../api/api'
+import { ARTICLES } from '../../utils/routes/routesPath'
 import { setUser } from '../../redux/auth/auth.slice'
 
 import classes from './EditProfile.module.scss'
@@ -21,7 +22,7 @@ export default function EditProfile() {
   useEffect(() => {
     if (result.isSuccess) {
       dispatch(setUser(result.data.user))
-      navigate('/articles')
+      navigate(ARTICLES)
     }
   }, [result.isSuccess, navigate, setUser])
 
